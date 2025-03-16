@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 InstaScan - Advanced Instagram OSINT Tool
 -----------------------------------------
@@ -482,4 +481,27 @@ def main():
     parser.add_argument("-e", "--external-search", action="store_true",
                         help="Search for the username on other platforms")
     
-    args = p
+    args = parser.parse_args()
+    
+    try:
+        scanner = InstaScan(args)
+        
+        # Login if credentials provided
+        if args.login:
+            username, password = args.login
+            if not scanner.login(username, password):
+                print("[*] Continuing without authentication")
+        
+        # Run the scan
+        scanner.run()
+        
+    except KeyboardInterrupt:
+        print("\n[!] Scan interrupted by user")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n[!] An error occurred: {e}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
